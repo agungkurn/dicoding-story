@@ -1,0 +1,46 @@
+# Flutter Specific
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+build/
+ios/Flutter/App.framework/
+ios/Flutter/Flutter.framework/
+ios/Podfile.lock
+ios/.symlinks/
+ios/Pods/
+android/.gradle/
+android/build/
+android/app/build/
+android/app/.cxx/
+android/app/src/test/java/
+android/app/src/androidTest/java/
+web/build/
+
+# Code Generation
+*.g.dart
+*.freezed.dart
+
+# IDE Specific
+.idea/
+*.iml
+*.iws
+.vscode/
+
+# OS Specific
+.DS_Store
+Thumbs.db
+
+# General
+*.log
+*.bak
+*.swp
+*.swo
+*~
+*.tmp
+*.temp
+*.cache
+*.local
+*.lock
+
+# Firebase
+google-services.json
