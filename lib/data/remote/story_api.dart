@@ -1,3 +1,4 @@
+import 'package:dicoding_story/data/model/response/story_details_response.dart';
 import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
 
@@ -21,7 +22,16 @@ class StoryApi {
     );
     final parsed = StoryListResponse.fromJson(response.data);
 
-    print("parsed: $parsed");
+    if (parsed.error) {
+      throw DisplayException(parsed.message);
+    } else {
+      return parsed;
+    }
+  }
+
+  Future<StoryDetailsResponse> getStoryDetails(String id) async {
+    final response = await _dio.get("/stories/$id");
+    final parsed = StoryDetailsResponse.fromJson(response.data);
 
     if (parsed.error) {
       throw DisplayException(parsed.message);

@@ -1,5 +1,4 @@
 import 'package:dicoding_story/auth/auth_bloc.dart';
-import 'package:dicoding_story/data/remote/display_exception.dart';
 import 'package:dicoding_story/di/di_config.dart';
 import 'package:dicoding_story/navigation/app_route.dart';
 import 'package:dicoding_story/ui/login/login_form_bloc.dart';
@@ -46,17 +45,12 @@ class LoginScreen extends StatelessWidget {
       child: BlocListener<AuthBloc, AuthState>(
         listener: (context, state) {
           if (state is AuthError) {
-            final msg =
-                (state.exception != null && state.exception is DisplayException)
-                    ? (state.exception as DisplayException).message
-                    : null;
-
             showCupertinoDialog(
               context: context,
               builder:
                   (context) => CupertinoAlertDialog(
                     title: Text("Terjadi kesalahan"),
-                    content: Text(msg ?? "Silahkan coba lagi nanti"),
+                    content: Text(state.message ?? "Silahkan coba lagi nanti"),
                     actions: [
                       CupertinoButton(
                         child: Text("Oke"),

@@ -3,6 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
 
+import '../data/remote/display_exception.dart';
+
 part 'auth_event.dart';
 
 part 'auth_state.dart';
@@ -32,7 +34,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         await _repository.setToken(token);
         emit(AuthState.authenticated(token));
       } on Exception catch (e) {
-        emit(AuthState.error(e));
+        final msg = (e is DisplayException) ? e.message : null;
+        emit(AuthState.error(msg));
       }
     });
     on<_Register>((event, emit) async {
@@ -42,7 +45,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         await _repository.register(event.name, event.email, event.password);
         emit(AuthState.loginAfterRegister());
       } on Exception catch (e) {
-        emit(AuthState.error(e));
+        final msg = (e is DisplayException) ? e.message : null;
+        emit(AuthState.error(msg));
       }
     });
   }

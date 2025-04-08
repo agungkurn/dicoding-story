@@ -6,8 +6,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../data/remote/display_exception.dart';
-
 class RegisterScreen extends StatelessWidget {
   const RegisterScreen({super.key});
 
@@ -22,17 +20,12 @@ class RegisterScreen extends StatelessWidget {
       child: BlocListener<AuthBloc, AuthState>(
         listener: (context, state) {
           if (state is AuthError) {
-            final msg =
-                (state.exception != null && state.exception is DisplayException)
-                    ? (state.exception as DisplayException).message
-                    : null;
-
             showCupertinoDialog(
               context: context,
               builder:
                   (context) => CupertinoAlertDialog(
                     title: Text("Terjadi kesalahan"),
-                    content: Text(msg ?? "Silahkan coba lagi nanti"),
+                    content: Text(state.message ?? "Silahkan coba lagi nanti"),
                     actions: [
                       CupertinoButton(
                         child: Text("Oke"),

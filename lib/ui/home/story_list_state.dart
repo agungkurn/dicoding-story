@@ -8,7 +8,5 @@ class StoryListState with _$StoryListState {
 
   factory StoryListState.success(List<Story> stories) = StoryListSuccess;
 
-  const factory StoryListState.error(Exception? exception) = StoryListError;
-
-  const factory StoryListState.detailsOpened(String id) = StoryListDetailsOpened;
+  const factory StoryListState.error(String? message) = StoryListError;
 }

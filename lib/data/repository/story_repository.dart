@@ -23,4 +23,14 @@ class StoryRepository {
       rethrow;
     }
   }
+
+  Future<Story> getStoryDetails(String id) async {
+    try {
+      final result = await _api.getStoryDetails(id);
+      return result.story;
+    } catch (e, stack) {
+      if (kDebugMode) print(stack);
+      rethrow;
+    }
+  }
 }

@@ -1,5 +1,6 @@
 import 'package:dicoding_story/di/di_config.dart';
 import 'package:dicoding_story/navigation/app_route.dart';
+import 'package:dicoding_story/ui/details/details_screen.dart';
 import 'package:dicoding_story/ui/home/home_screen.dart';
 import 'package:dicoding_story/ui/login/login_screen.dart';
 import 'package:dicoding_story/ui/register/register_screen.dart';
@@ -61,6 +62,13 @@ class MyApp extends StatelessWidget {
           GoRoute(
             path: AppRoute.home,
             builder: (context, state) => HomeScreen(),
+          ),
+          GoRoute(
+            path: AppRoute.details,
+            builder: (context, state) {
+              final id = state.extra?.toString() ?? "";
+              return DetailsScreen(storyId: id);
+            },
           ),
         ],
       ),

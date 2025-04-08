@@ -10,7 +10,7 @@ class AuthState with _$AuthState {
 
   const factory AuthState.loginAfterRegister() = AuthLoginAfterRegister;
 
-  const factory AuthState.error(Exception? exception) = AuthError;
+  const factory AuthState.error(String? message) = AuthError;
 
   const factory AuthState.loading() = AuthLoading;
 }
