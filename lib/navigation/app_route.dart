@@ -5,4 +5,5 @@ class AppRoute {
   static const login = "$auth/login";
   static const register = "$auth/register";
   static const details = "/details";
+  static const createStory = "/create";
 }

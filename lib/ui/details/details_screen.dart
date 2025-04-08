@@ -51,7 +51,7 @@ class DetailsScreen extends StatelessWidget {
                         child: _DetailsContent(
                           context: context,
                           story: state.story.copyWith(
-                            description: state.story.description * 10,
+                            description: state.story.description,
                           ),
                           expandDescription: state.textExpanded,
                           onExpandDescription: () {
@@ -111,7 +111,7 @@ class DetailsScreen extends StatelessWidget {
                             style: CupertinoTheme.of(
                               context,
                             ).textTheme.textStyle.copyWith(
-                              fontSize: 12,
+                              fontSize: 14,
                               color: CupertinoColors.white,
                             ),
                           ),
@@ -124,7 +124,7 @@ class DetailsScreen extends StatelessWidget {
                         style: CupertinoTheme.of(
                           context,
                         ).textTheme.textStyle.copyWith(
-                          fontSize: 12,
+                          fontSize: 14,
                           color: CupertinoColors.white,
                         ),
                       ),

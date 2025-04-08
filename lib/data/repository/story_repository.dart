@@ -33,4 +33,21 @@ class StoryRepository {
       rethrow;
     }
   }
+
+  Future<void> uploadStory({
+    required List<int> bytes,
+    required String fileName,
+    required String description,
+  }) async {
+    try {
+      await _api.postStory(
+        bytes: bytes,
+        fileName: fileName,
+        description: description,
+      );
+    } catch (e, stack) {
+      if (kDebugMode) print(stack);
+      rethrow;
+    }
+  }
 }

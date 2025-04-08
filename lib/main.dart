@@ -1,5 +1,6 @@
 import 'package:dicoding_story/di/di_config.dart';
 import 'package:dicoding_story/navigation/app_route.dart';
+import 'package:dicoding_story/ui/create/create_story_screen.dart';
 import 'package:dicoding_story/ui/details/details_screen.dart';
 import 'package:dicoding_story/ui/home/home_screen.dart';
 import 'package:dicoding_story/ui/login/login_screen.dart';
@@ -69,6 +70,10 @@ class MyApp extends StatelessWidget {
               final id = state.extra?.toString() ?? "";
               return DetailsScreen(storyId: id);
             },
+          ),
+          GoRoute(
+            path: AppRoute.createStory,
+            builder: (context, state) => CreateStoryScreen(),
           ),
         ],
       ),

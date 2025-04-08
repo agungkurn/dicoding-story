@@ -1,4 +1,5 @@
 import 'package:dicoding_story/data/model/response/story_details_response.dart';
+import 'package:dicoding_story/data/model/response/upload_response.dart';
 import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
 
@@ -32,6 +33,34 @@ class StoryApi {
   Future<StoryDetailsResponse> getStoryDetails(String id) async {
     final response = await _dio.get("/stories/$id");
     final parsed = StoryDetailsResponse.fromJson(response.data);
+
+    if (parsed.error) {
+      throw DisplayException(parsed.message);
+    } else {
+      return parsed;
+    }
+  }
+
+  Future<UploadResponse> postStory({
+    required List<int> bytes,
+    required String fileName,
+    required String description,
+  }) async {
+    final formData = FormData.fromMap({
+      "description": description,
+      "photo": MultipartFile.fromBytes(
+        bytes,
+        filename: fileName,
+        contentType: DioMediaType("image", "jpeg"),
+      ),
+    });
+
+    final response = await _dio.post(
+      "/stories",
+      data: formData,
+      options: Options(headers: {"Content-Type": "multipart/form-data"}),
+    );
+    final parsed = UploadResponse.fromJson(response.data);
 
     if (parsed.error) {
       throw DisplayException(parsed.message);
