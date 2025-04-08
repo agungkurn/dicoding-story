@@ -12,14 +12,6 @@ import 'auth/auth_bloc.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // registerService();
-  // registerLocal();
-  // registerRemote();
-  // registerRepository();
-  // registerBloc();
-
-  // await getIt.allReady();
-
   await configureDependencies();
 
   runApp(
@@ -28,7 +20,6 @@ void main() async {
         BlocProvider.value(
           value: getIt.get<AuthBloc>()..add(AuthEvent.checkRequested()),
         ),
-        // BlocProvider<AuthBloc>(create: (context) => getIt<AuthBloc>()),
       ],
       child: const MyApp(),
     ),

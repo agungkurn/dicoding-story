@@ -5,37 +5,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../constants/base_url.dart';
 import '../data/local/auth_preferences.dart';
 
-// void registerService() {
-//   getIt.registerSingleton<SharedPreferencesAsync>(SharedPreferencesAsync());
-//   getIt.registerSingletonAsync<Dio>(
-//     () async => Dio(
-//       BaseOptions(
-//         baseUrl: Constants.BASE_URL,
-//         connectTimeout: Duration(seconds: 10),
-//         receiveTimeout: Duration(seconds: 10),
-//         headers: {"Content-Type": "application/json"},
-//       ),
-//     ),
-//     instanceName: "guest",
-//   );
-//   getIt.registerLazySingletonAsync<Dio>(() async {
-//     final sharedPref = getIt.get<SharedPreferencesAsync>();
-//     final token = await sharedPref.getString(AuthPreferences.KEY_TOKEN);
-//
-//     return Dio(
-//       BaseOptions(
-//         baseUrl: Constants.BASE_URL,
-//         connectTimeout: Duration(seconds: 10),
-//         receiveTimeout: Duration(seconds: 10),
-//         headers: {
-//           "Content-Type": "application/json",
-//           "Authorization": "Bearer $token",
-//         },
-//       ),
-//     );
-//   }, instanceName: "user");
-// }
-
 @module
 abstract class ServiceModule {
   @singleton
