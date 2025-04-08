@@ -1,16 +1,16 @@
 # dicoding_story
 
-Submission for Dicoding's Belajar Pengembangan Aplikasi Flutter Intermediate
+Submission for [Dicoding's Belajar Pengembangan Aplikasi Flutter Intermediate](https://www.dicoding.com/academies/480/)
 
-## Getting Started
+## Features:
+1. Login & register
+2. Story list & details
+3. Create new stories (upload image)
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Tech stack:
+1. Dio (for API request)
+2. SharedPreferences
+3. API Dicoding story
+4. GetIt & Injectable DI
+5. BLoC
+6. Go router (for declarative navigation)
