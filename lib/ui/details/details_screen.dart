@@ -11,62 +11,71 @@ class DetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CupertinoTheme(
-      data: CupertinoTheme.of(context).copyWith(brightness: Brightness.dark),
-      child: CupertinoPageScaffold(
-        child: BlocProvider<DetailsBloc>(
-          create:
-              (_) =>
-                  getIt<DetailsBloc>()..add(DetailsEvent.fetchDetails(storyId)),
-          child: BlocBuilder<DetailsBloc, DetailsState>(
-            builder: (context, state) {
-              final bloc = context.read<DetailsBloc>();
+    return BlocProvider<DetailsBloc>(
+      create:
+          (_) => getIt<DetailsBloc>()..add(DetailsEvent.fetchDetails(storyId)),
+      child: BlocBuilder<DetailsBloc, DetailsState>(
+        builder: (context, state) {
+          final bloc = context.read<DetailsBloc>();
 
-              if (state is DetailsLoading) {
-                return Center(child: CupertinoActivityIndicator());
-              } else if (state is DetailsError) {
-                return Column(
-                  children: [
-                    Text(state.message ?? "Terjadi kesalahan"),
-                    CupertinoButton(
-                      child: Text("Coba Lagi"),
-                      onPressed: () {
-                        bloc.add(DetailsEvent.fetchDetails(storyId));
-                      },
-                    ),
-                  ],
-                );
-              } else if (state is DetailsSuccess) {
-                return Container(
-                  margin: MediaQuery.of(context).padding.copyWith(top: 0),
-                  child: _DetailsContent(context, state.story),
-                );
-              } else {
-                return SizedBox.shrink();
-              }
-            },
-          ),
-        ),
+          return CupertinoTheme(
+            data: CupertinoTheme.of(
+              context,
+            ).copyWith(brightness: Brightness.dark),
+            child: CupertinoPageScaffold(
+              navigationBar: CupertinoNavigationBar(
+                middle: Text(
+                  state is DetailsSuccess ? state.story.name : "",
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+              child:
+                  state is DetailsLoading
+                      ? Center(child: CupertinoActivityIndicator())
+                      : state is DetailsError
+                      ? Column(
+                        children: [
+                          Text(state.message ?? "Terjadi kesalahan"),
+                          CupertinoButton(
+                            child: Text("Coba Lagi"),
+                            onPressed: () {
+                              bloc.add(DetailsEvent.fetchDetails(storyId));
+                            },
+                          ),
+                        ],
+                      )
+                      : state is DetailsSuccess
+                      ? Container(
+                        margin: MediaQuery.of(context).padding,
+                        child: _DetailsContent(
+                          context: context,
+                          story: state.story.copyWith(
+                            description: state.story.description * 10,
+                          ),
+                          expandDescription: state.textExpanded,
+                          onExpandDescription: () {
+                            bloc.add(DetailsEvent.toggleDescription());
+                          },
+                        ),
+                      )
+                      : SizedBox.shrink(),
+            ),
+          );
+        },
       ),
     );
   }
 
-  Widget _DetailsContent(BuildContext context, Story story) => Stack(
+  Widget _DetailsContent({
+    required BuildContext context,
+    required Story story,
+    required bool expandDescription,
+    required GestureTapCallback onExpandDescription,
+  }) => Stack(
     children: [
       SizedBox.expand(
         child: Image.network(story.photoUrl, fit: BoxFit.fitWidth),
-      ),
-      Positioned(
-        top: 0,
-        right: 0,
-        left: 0,
-        child: CupertinoNavigationBar(
-          middle: Text(
-            story.name,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-          ),
-        ),
       ),
       Positioned(
         bottom: 0,
@@ -88,13 +97,38 @@ class DetailsScreen extends StatelessWidget {
             ),
           ),
           padding: const EdgeInsets.all(16),
-          child: Text(
-            story.description,
-            style: CupertinoTheme.of(context).textTheme.textStyle.copyWith(
-              fontSize: 12,
+          child: GestureDetector(
+            onTap: onExpandDescription,
+            child: AnimatedSize(
+              duration: Duration(milliseconds: 100),
+              child:
+                  expandDescription
+                      ? ConstrainedBox(
+                        constraints: BoxConstraints(maxHeight: 150),
+                        child: SingleChildScrollView(
+                          child: Text(
+                            story.description,
+                            style: CupertinoTheme.of(
+                              context,
+                            ).textTheme.textStyle.copyWith(
+                              fontSize: 12,
+                              color: CupertinoColors.white,
+                            ),
+                          ),
+                        ),
+                      )
+                      : Text(
+                        story.description,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: CupertinoTheme.of(
+                          context,
+                        ).textTheme.textStyle.copyWith(
+                          fontSize: 12,
+                          color: CupertinoColors.white,
+                        ),
+                      ),
             ),
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
           ),
         ),
       ),

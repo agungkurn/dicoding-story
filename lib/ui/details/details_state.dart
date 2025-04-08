@@ -6,7 +6,10 @@ class DetailsState with _$DetailsState {
 
   const factory DetailsState.loading() = DetailsLoading;
 
-  const factory DetailsState.success(Story story) = DetailsSuccess;
+  const factory DetailsState.success({
+    required Story story,
+    @Default(false) bool textExpanded,
+  }) = DetailsSuccess;
 
   const factory DetailsState.error(String? message) = DetailsError;
 }

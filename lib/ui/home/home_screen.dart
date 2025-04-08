@@ -28,7 +28,7 @@ class HomeScreen extends StatelessWidget {
                   onPressed: () {
                     authBlocRead.add(AuthEvent.logout());
                   },
-                  child: Text("Keluar", style: TextStyle(fontSize: 14)),
+                  child: Text("Keluar"),
                 ),
       ),
       child: BlocProvider<StoryListBloc>(
