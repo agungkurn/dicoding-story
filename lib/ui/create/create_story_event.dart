@@ -1,7 +1,7 @@
 part of 'create_story_bloc.dart';
 
 @freezed
-class CreateStoryEvent with _$CreateStoryEvent {
+abstract class CreateStoryEvent with _$CreateStoryEvent {
   const factory CreateStoryEvent.addImage(XFile image) = _AddImage;
 
   const factory CreateStoryEvent.removeImage() = _RemoveImage;

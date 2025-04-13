@@ -5,6 +5,7 @@ import 'package:dicoding_story/navigation/modal_popup_page.dart';
 import 'package:dicoding_story/ui/create/create_story_screen.dart';
 import 'package:dicoding_story/ui/details/details_screen.dart';
 import 'package:dicoding_story/ui/home/home_screen.dart';
+import 'package:dicoding_story/ui/home/story_list_bloc.dart';
 import 'package:dicoding_story/ui/login/login_screen.dart';
 import 'package:dicoding_story/ui/register/register_screen.dart';
 import 'package:flutter/cupertino.dart';
@@ -64,7 +65,14 @@ class MyApp extends StatelessWidget {
                 ),
                 GoRoute(
                   path: AppRoute.home,
-                  builder: (context, state) => HomeScreen(),
+                  builder:
+                      (context, state) => BlocProvider(
+                        create:
+                            (context) =>
+                                getIt<StoryListBloc>()
+                                  ..add(StoryListEvent.fetchList()),
+                        child: HomeScreen(),
+                      ),
                 ),
                 GoRoute(
                   path: AppRoute.details,

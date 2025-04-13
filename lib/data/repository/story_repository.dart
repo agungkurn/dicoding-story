@@ -11,7 +11,7 @@ class StoryRepository {
   StoryRepository(this._api);
 
   Future<List<Story>> getAllStories({
-    int page = 1,
+    required int page,
     int size = 10,
     int location = 0,
   }) async {

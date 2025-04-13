@@ -5,24 +5,39 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../di/di_config.dart';
-
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  final scrollController = ScrollController();
+  late final StoryListBloc storyBloc;
+
+  @override
+  void initState() {
+    super.initState();
+    storyBloc = context.read<StoryListBloc>();
+    scrollController.addListener(() {
+      if (scrollController.position.pixels >=
+          scrollController.position.maxScrollExtent) {
+        if (storyBloc.state.hasNextPage) {
+          storyBloc.add(StoryListEvent.fetchList());
+        }
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     final authBlocRead = context.read<AuthBloc>();
     final authBlocWatch = context.watch<AuthBloc>();
 
-    return BlocProvider<StoryListBloc>(
-      create:
-          (context) => getIt<StoryListBloc>()..add(StoryListEvent.fetchList()),
-      child: BlocBuilder<StoryListBloc, StoryListState>(
-        builder: (context, state) {
-          final storyBloc = context.read<StoryListBloc>();
-
-          return CupertinoPageScaffold(
+    return BlocBuilder<StoryListBloc, StoryListState>(
+      builder:
+          (context, state) => CupertinoPageScaffold(
             navigationBar: CupertinoNavigationBar(
               middle: Text("Dicoding Story"),
               trailing:
@@ -55,42 +70,49 @@ class HomeScreen extends StatelessWidget {
                       ),
             ),
             child:
-                state is StoryListLoading
-                    ? Center(child: CupertinoActivityIndicator())
-                    : state is StoryListSuccess
-                    ? ListView.builder(
-                      itemCount: state.stories.length,
-                      itemBuilder: (context, i) {
-                        final story = state.stories[i];
-                        return _StoryItem(
-                          context: context,
-                          image: story.photoUrl,
-                          name: story.name,
-                          description: story.description,
-                          onTap: () {
-                            context.push(AppRoute.details, extra: story.id);
-                          },
-                        );
-                      },
-                    )
-                    : state is StoryListError
-                    ? Column(
-                      children: [
-                        Text(state.message ?? "Terjadi kesalahan"),
-                        CupertinoButton(
-                          child: Text("Coba Lagi"),
-                          onPressed: () {
-                            storyBloc.add(StoryListEvent.fetchList());
-                          },
-                        ),
-                      ],
-                    )
-                    : SizedBox.shrink(),
-          );
-        },
-      ),
+                state.loading
+                    ? _OnLoading()
+                    : state.error
+                    ? _OnError(state.errorMessage)
+                    : _OnSuccess(state),
+          ),
     );
   }
+
+  Widget _OnLoading() => Center(child: CupertinoActivityIndicator());
+
+  Widget _OnError(String? message) => Column(
+    children: [
+      Text(message ?? "Terjadi kesalahan"),
+      CupertinoButton(
+        child: Text("Coba Lagi"),
+        onPressed: () {
+          storyBloc.add(StoryListEvent.fetchList());
+        },
+      ),
+    ],
+  );
+
+  Widget _OnSuccess(StoryListState state) => ListView.builder(
+    controller: scrollController,
+    itemCount: state.stories.length + (state.hasNextPage ? 1 : 0),
+    itemBuilder: (context, i) {
+      if (i == state.stories.length && state.hasNextPage) {
+        return _OnLoading();
+      }
+
+      final story = state.stories[i];
+      return _StoryItem(
+        context: context,
+        image: story.photoUrl,
+        name: story.name,
+        description: story.description,
+        onTap: () {
+          context.push(AppRoute.details, extra: story.id);
+        },
+      );
+    },
+  );
 
   Widget _StoryItem({
     required BuildContext context,
@@ -152,4 +174,10 @@ class HomeScreen extends StatelessWidget {
       ],
     ),
   );
+
+  @override
+  void dispose() {
+    scrollController.dispose();
+    super.dispose();
+  }
 }

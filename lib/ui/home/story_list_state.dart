@@ -1,12 +1,22 @@
 part of 'story_list_bloc.dart';
 
 @freezed
-class StoryListState with _$StoryListState {
-  const factory StoryListState.idle() = StoryListIdle;
+abstract class StoryListState with _$StoryListState {
+  const factory StoryListState({
+    required List<Story> stories,
+    required bool loading,
+    required bool loadingNextPage,
+    required bool hasNextPage,
+    required bool error,
+    required String? errorMessage,
+  }) = _StoryListState;
 
-  const factory StoryListState.loading() = StoryListLoading;
-
-  factory StoryListState.success(List<Story> stories) = StoryListSuccess;
-
-  const factory StoryListState.error(String? message) = StoryListError;
+  factory StoryListState.initial() => StoryListState(
+    stories: [],
+    loading: false,
+    loadingNextPage: false,
+    hasNextPage: false,
+    error: false,
+    errorMessage: null,
+  );
 }

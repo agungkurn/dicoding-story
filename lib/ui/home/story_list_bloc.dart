@@ -14,16 +14,59 @@ part 'story_list_state.dart';
 class StoryListBloc extends Bloc<StoryListEvent, StoryListState> {
   final StoryRepository _repository;
 
-  StoryListBloc(this._repository) : super(StoryListState.idle()) {
+  int? _page = 1;
+  int _size = 10;
+
+  StoryListBloc(this._repository) : super(StoryListState.initial()) {
     on<_FetchList>((event, emit) async {
-      emit(StoryListState.loading());
+      if (state.loading || state.loadingNextPage) {
+        return;
+      }
+
+      _page ??= 1;
+
+      if (_page == 1) {
+        emit(
+          state.copyWith(
+            loading: true,
+            loadingNextPage: false,
+            error: false,
+            errorMessage: null,
+          ),
+        );
+      } else {
+        emit(
+          state.copyWith(
+            loadingNextPage: true,
+            error: false,
+            errorMessage: null,
+          ),
+        );
+      }
 
       try {
-        final result = await _repository.getAllStories();
-        emit(StoryListState.success(result));
+        final newItems = await _repository.getAllStories(
+          page: _page!,
+          size: _size,
+        );
+
+        if (newItems.length < _size) {
+          _page = null;
+        } else {
+          _page = _page! + 1;
+        }
+
+        emit(
+          state.copyWith(
+            stories: [...state.stories, ...newItems],
+            loading: false,
+            loadingNextPage: false,
+            hasNextPage: _page != null,
+          ),
+        );
       } on Exception catch (e) {
         final msg = (e is DisplayException) ? e.message : null;
-        emit(StoryListState.error(msg));
+        emit(state.copyWith(error: true, errorMessage: msg));
       }
     });
   }
