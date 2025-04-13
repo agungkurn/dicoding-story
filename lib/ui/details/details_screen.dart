@@ -1,7 +1,10 @@
 import 'package:dicoding_story/data/model/response/story.dart';
+import 'package:dicoding_story/navigation/app_route.dart';
 import 'package:dicoding_story/ui/details/details_bloc.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 class DetailsScreen extends StatelessWidget {
   final String storyId;
@@ -46,9 +49,8 @@ class DetailsScreen extends StatelessWidget {
                         margin: MediaQuery.of(context).padding,
                         child: _DetailsContent(
                           context: context,
-                          story: state.story.copyWith(
-                            description: state.story.description,
-                          ),
+                          story: state.story,
+                          address: state.address,
                           expandDescription: state.textExpanded,
                           onExpandDescription: () {
                             bloc.add(DetailsEvent.toggleDescription());
@@ -64,6 +66,7 @@ class DetailsScreen extends StatelessWidget {
   Widget _DetailsContent({
     required BuildContext context,
     required Story story,
+    required String? address,
     required bool expandDescription,
     required GestureTapCallback onExpandDescription,
   }) => Stack(
@@ -91,41 +94,94 @@ class DetailsScreen extends StatelessWidget {
             ),
           ),
           padding: const EdgeInsets.all(16),
-          child: GestureDetector(
-            onTap: onExpandDescription,
-            child: AnimatedSize(
-              duration: Duration(milliseconds: 100),
-              child:
-                  expandDescription
-                      ? ConstrainedBox(
-                        constraints: BoxConstraints(maxHeight: 150),
-                        child: SingleChildScrollView(
-                          child: Text(
-                            story.description,
-                            style: CupertinoTheme.of(
-                              context,
-                            ).textTheme.textStyle.copyWith(
-                              fontSize: 14,
-                              color: CupertinoColors.white,
-                            ),
-                          ),
-                        ),
-                      )
-                      : Text(
-                        story.description,
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                        style: CupertinoTheme.of(
-                          context,
-                        ).textTheme.textStyle.copyWith(
-                          fontSize: 14,
-                          color: CupertinoColors.white,
-                        ),
-                      ),
-            ),
+          child: Column(
+            spacing: 16,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _DescriptionWidget(
+                onExpandDescription: onExpandDescription,
+                expandDescription: expandDescription,
+                story: story,
+                context: context,
+              ),
+              address != null && address.isNotEmpty
+                  ? _LocationWidget(
+                    context: context,
+                    address: address,
+                    onTap: () {
+                      final lat = story.lat;
+                      final lng = story.lon;
+
+                      context.push(
+                        "${AppRoute.detailsMap}?"
+                        "${AppRoute.detailsMapLatitude}=$lat&"
+                        "${AppRoute.detailsMapLongitude}=$lng&"
+                        "${AppRoute.detailsMapAddress}=$address",
+                      );
+                    },
+                  )
+                  : SizedBox.shrink(),
+            ],
           ),
         ),
       ),
     ],
+  );
+
+  Widget _DescriptionWidget({
+    required BuildContext context,
+    required Story story,
+    required bool expandDescription,
+    required GestureTapCallback onExpandDescription,
+  }) => GestureDetector(
+    onTap: onExpandDescription,
+    child: AnimatedSize(
+      duration: Duration(milliseconds: 100),
+      child:
+          expandDescription
+              ? ConstrainedBox(
+                constraints: BoxConstraints(maxHeight: 150),
+                child: SingleChildScrollView(
+                  child: Text(
+                    story.description,
+                    style: CupertinoTheme.of(context).textTheme.textStyle
+                        .copyWith(fontSize: 14, color: CupertinoColors.white),
+                  ),
+                ),
+              )
+              : Text(
+                story.description,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                // style: CupertinoTheme.of(context).textTheme.textStyle.copyWith(
+                //   fontSize: 14,
+                //   color: CupertinoColors.white,
+                // ),
+              ),
+    ),
+  );
+
+  Widget _LocationWidget({
+    required BuildContext context,
+    required String address,
+    required GestureTapCallback onTap,
+  }) => CupertinoButton.tinted(
+    onPressed: onTap,
+    child: Row(
+      spacing: 8,
+      children: [
+        Icon(Icons.location_pin),
+        Flexible(
+          child: Text(
+            address,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: CupertinoTheme.of(
+              context,
+            ).textTheme.textStyle.copyWith(fontSize: 14),
+          ),
+        ),
+      ],
+    ),
   );
 }

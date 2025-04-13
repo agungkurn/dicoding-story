@@ -8,6 +8,7 @@ class DetailsState with _$DetailsState {
 
   const factory DetailsState.success({
     required Story story,
+    required String? address,
     @Default(false) bool textExpanded,
   }) = DetailsSuccess;
 

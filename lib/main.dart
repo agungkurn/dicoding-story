@@ -10,6 +10,7 @@ import 'package:dicoding_story/ui/home/home_screen.dart';
 import 'package:dicoding_story/ui/home/story_list_bloc.dart';
 import 'package:dicoding_story/ui/login/login_form_bloc.dart';
 import 'package:dicoding_story/ui/login/login_screen.dart';
+import 'package:dicoding_story/ui/maps/maps_screen.dart';
 import 'package:dicoding_story/ui/register/register_form_bloc.dart';
 import 'package:dicoding_story/ui/register/register_screen.dart';
 import 'package:flutter/cupertino.dart';
@@ -96,6 +97,33 @@ class MyApp extends StatelessWidget {
                               getIt<DetailsBloc>()
                                 ..add(DetailsEvent.fetchDetails(id)),
                       child: DetailsScreen(storyId: id),
+                    );
+                  },
+                ),
+                GoRoute(
+                  path: AppRoute.detailsMap,
+                  builder: (_, state) {
+                    final latitude =
+                        double.tryParse(
+                          state.uri.queryParameters[AppRoute
+                                  .detailsMapLatitude] ??
+                              "",
+                        ) ??
+                        .0;
+                    final longitude =
+                        double.tryParse(
+                          state.uri.queryParameters[AppRoute
+                                  .detailsMapLongitude] ??
+                              "",
+                        ) ??
+                        .0;
+                    final address =
+                        state.uri.queryParameters[AppRoute.detailsMapAddress] ??
+                        "";
+                    return MapsScreen(
+                      latitude: latitude,
+                      longitude: longitude,
+                      address: address,
                     );
                   },
                 ),

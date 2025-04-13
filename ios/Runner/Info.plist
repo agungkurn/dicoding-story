@@ -51,5 +51,7 @@
         <string>Buka privasi ini untuk akses mikrofon.</string>
         <key>NSPhotoLibraryUsageDescription</key>
         <string>Buka privasi ini untuk akses galeri foto.</string>
+        <key>GOOGLE_MAPS_API_KEY</key>
+        <string>$(GOOGLE_MAPS_API_KEY)</string>
 </dict>
 </plist>
