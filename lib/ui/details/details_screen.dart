@@ -1,5 +1,4 @@
 import 'package:dicoding_story/data/model/response/story.dart';
-import 'package:dicoding_story/di/di_config.dart';
 import 'package:dicoding_story/ui/details/details_bloc.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -11,14 +10,11 @@ class DetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<DetailsBloc>(
-      create:
-          (_) => getIt<DetailsBloc>()..add(DetailsEvent.fetchDetails(storyId)),
-      child: BlocBuilder<DetailsBloc, DetailsState>(
-        builder: (context, state) {
-          final bloc = context.read<DetailsBloc>();
+    final bloc = context.read<DetailsBloc>();
 
-          return CupertinoTheme(
+    return BlocBuilder<DetailsBloc, DetailsState>(
+      builder:
+          (context, state) => CupertinoTheme(
             data: CupertinoTheme.of(
               context,
             ).copyWith(brightness: Brightness.dark),
@@ -61,9 +57,7 @@ class DetailsScreen extends StatelessWidget {
                       )
                       : SizedBox.shrink(),
             ),
-          );
-        },
-      ),
+          ),
     );
   }
 

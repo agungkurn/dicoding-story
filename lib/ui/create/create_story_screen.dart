@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:dicoding_story/di/di_config.dart';
 import 'package:dicoding_story/ui/create/create_story_bloc.dart';
 import 'package:dicoding_story/widgets/custom_cupertino_text_field.dart';
 import 'package:flutter/cupertino.dart';
@@ -15,78 +14,76 @@ class CreateStoryScreen extends StatelessWidget {
   const CreateStoryScreen({super.key});
 
   @override
-  Widget build(BuildContext context) => BlocProvider<CreateStoryBloc>(
-    create: (_) => getIt<CreateStoryBloc>(),
-    child: BlocConsumer<CreateStoryBloc, CreateStoryState>(
-      listener: (context, state) {
-        if (state.success) {
-          context.pop(true);
-          return;
-        }
+  Widget build(BuildContext context) =>
+      BlocConsumer<CreateStoryBloc, CreateStoryState>(
+        listener: (context, state) {
+          if (state.success) {
+            context.pop(true);
+            return;
+          }
 
-        if (state.error) {
-          context.push(AppRoute.errorDialog, extra: state.errorMessage);
-        }
-      },
-      builder: (context, state) {
-        final bloc = context.read<CreateStoryBloc>();
-        return CupertinoTheme(
-          data: CupertinoTheme.of(
-            context,
-          ).copyWith(brightness: Brightness.dark),
-          child: CupertinoPageScaffold(
-            navigationBar: CupertinoNavigationBar(
-              middle: Text("Buat Story Baru"),
-              trailing: AnimatedSwitcher(
-                duration: Duration(milliseconds: 200),
-                child:
-                    state.loading
-                        ? CupertinoActivityIndicator()
-                        : state.canSubmit
-                        ? CupertinoButton(
-                          padding: EdgeInsets.zero,
-                          minSize: 0,
-                          child: Icon(Icons.send),
-                          onPressed: () {
-                            bloc.add(CreateStoryEvent.onSubmit());
-                          },
-                        )
-                        : SizedBox.shrink(),
+          if (state.error) {
+            context.push(AppRoute.errorDialog, extra: state.errorMessage);
+          }
+        },
+        builder: (context, state) {
+          final bloc = context.read<CreateStoryBloc>();
+          return CupertinoTheme(
+            data: CupertinoTheme.of(
+              context,
+            ).copyWith(brightness: Brightness.dark),
+            child: CupertinoPageScaffold(
+              navigationBar: CupertinoNavigationBar(
+                middle: Text("Buat Story Baru"),
+                trailing: AnimatedSwitcher(
+                  duration: Duration(milliseconds: 200),
+                  child:
+                      state.loading
+                          ? CupertinoActivityIndicator()
+                          : state.canSubmit
+                          ? CupertinoButton(
+                            padding: EdgeInsets.zero,
+                            minSize: 0,
+                            child: Icon(Icons.send),
+                            onPressed: () {
+                              bloc.add(CreateStoryEvent.onSubmit());
+                            },
+                          )
+                          : SizedBox.shrink(),
+                ),
+              ),
+              child: Container(
+                margin: MediaQuery.of(context).padding,
+                child: _CreateStoryContent(
+                  context: context,
+                  editable: !state.loading,
+                  image: state.image,
+                  openImagePicker: () async {
+                    final picker = ImagePicker();
+                    final pickedFile = await picker.pickImage(
+                      source: ImageSource.gallery,
+                    );
+
+                    if (pickedFile != null) {
+                      bloc.add(CreateStoryEvent.addImage(pickedFile));
+                    }
+                  },
+                  onRemoveImage: () {
+                    bloc.add(CreateStoryEvent.removeImage());
+                  },
+                  onDescriptionChanged: (text) {
+                    bloc.add(CreateStoryEvent.onDescriptionChanges(text));
+                  },
+                  descriptionErrorText:
+                      state.descriptionIsEmpty
+                          ? "Deskripsi tidak boleh kosong"
+                          : null,
+                ),
               ),
             ),
-            child: Container(
-              margin: MediaQuery.of(context).padding,
-              child: _CreateStoryContent(
-                context: context,
-                editable: !state.loading,
-                image: state.image,
-                openImagePicker: () async {
-                  final picker = ImagePicker();
-                  final pickedFile = await picker.pickImage(
-                    source: ImageSource.gallery,
-                  );
-
-                  if (pickedFile != null) {
-                    bloc.add(CreateStoryEvent.addImage(pickedFile));
-                  }
-                },
-                onRemoveImage: () {
-                  bloc.add(CreateStoryEvent.removeImage());
-                },
-                onDescriptionChanged: (text) {
-                  bloc.add(CreateStoryEvent.onDescriptionChanges(text));
-                },
-                descriptionErrorText:
-                    state.descriptionIsEmpty
-                        ? "Deskripsi tidak boleh kosong"
-                        : null,
-              ),
-            ),
-          ),
-        );
-      },
-    ),
-  );
+          );
+        },
+      );
 
   Widget _CreateStoryContent({
     required BuildContext context,
