@@ -6,6 +6,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../navigation/app_route.dart';
+
 class RegisterScreen extends StatelessWidget {
   const RegisterScreen({super.key});
 
@@ -20,20 +22,7 @@ class RegisterScreen extends StatelessWidget {
       child: BlocListener<AuthBloc, AuthState>(
         listener: (context, state) {
           if (state is AuthError) {
-            showCupertinoDialog(
-              context: context,
-              builder:
-                  (context) => CupertinoAlertDialog(
-                    title: Text("Terjadi kesalahan"),
-                    content: Text(state.message ?? "Silahkan coba lagi nanti"),
-                    actions: [
-                      CupertinoButton(
-                        child: Text("Oke"),
-                        onPressed: () => Navigator.pop(context),
-                      ),
-                    ],
-                  ),
-            );
+            context.push(AppRoute.errorDialog, extra: state.message);
           } else if (state is AuthLoginAfterRegister) {
             context.pop(true);
           }

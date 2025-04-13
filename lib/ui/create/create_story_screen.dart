@@ -9,6 +9,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 
+import '../../navigation/app_route.dart';
+
 class CreateStoryScreen extends StatelessWidget {
   const CreateStoryScreen({super.key});
 
@@ -23,22 +25,7 @@ class CreateStoryScreen extends StatelessWidget {
         }
 
         if (state.error) {
-          showCupertinoDialog(
-            context: context,
-            builder:
-                (context) => CupertinoAlertDialog(
-                  title: Text("Terjadi kesalahan"),
-                  content: Text(
-                    state.errorMessage ?? "Silahkan coba lagi nanti",
-                  ),
-                  actions: [
-                    CupertinoButton(
-                      child: Text("Oke"),
-                      onPressed: () => Navigator.pop(context),
-                    ),
-                  ],
-                ),
-          );
+          context.push(AppRoute.errorDialog, extra: state.errorMessage);
         }
       },
       builder: (context, state) {

@@ -39,7 +39,7 @@ class CreateStoryBloc extends Bloc<CreateStoryEvent, CreateStoryState> {
       try {
         if (state.image != null) {
           final bytes = await state.image!.readAsBytes();
-          final compressed = await _compressImage(bytes);
+          final compressed = await compute(_compressImage, bytes);
 
           await _repository.uploadStory(
             bytes: compressed,
@@ -54,20 +54,20 @@ class CreateStoryBloc extends Bloc<CreateStoryEvent, CreateStoryState> {
       }
     });
   }
+}
 
-  Future<List<int>> _compressImage(List<int> bytes) async {
-    int imageLength = bytes.length;
-    if (imageLength < 1000000) return bytes;
-    final img.Image image = img.decodeImage(Uint8List.fromList(bytes))!;
-    int compressQuality = 100;
-    int length = imageLength;
-    List<int> newByte = [];
+List<int> _compressImage(List<int> bytes) {
+  int imageLength = bytes.length;
+  if (imageLength < 1000000) return bytes;
+  final img.Image image = img.decodeImage(Uint8List.fromList(bytes))!;
+  int compressQuality = 100;
+  int length = imageLength;
+  List<int> newByte = [];
 
-    do {
-      compressQuality -= 10;
-      newByte = img.encodeJpg(image, quality: compressQuality);
-      length = newByte.length;
-    } while (length > 1000000);
-    return newByte;
-  }
+  do {
+    compressQuality -= 10;
+    newByte = img.encodeJpg(image, quality: compressQuality);
+    length = newByte.length;
+  } while (length > 1000000);
+  return newByte;
 }

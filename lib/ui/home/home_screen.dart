@@ -32,10 +32,7 @@ class HomeScreen extends StatelessWidget {
                         padding: EdgeInsets.zero,
                         minSize: 0,
                         onPressed: () async {
-                          final index = await showCupertinoModalPopup<int>(
-                            context: context,
-                            builder: (context) => _MoreOptions(context),
-                          );
+                          final index = await context.push(AppRoute.sheetHome);
 
                           switch (index) {
                             case 0:
@@ -94,25 +91,6 @@ class HomeScreen extends StatelessWidget {
       ),
     );
   }
-
-  CupertinoActionSheet _MoreOptions(BuildContext context) =>
-      CupertinoActionSheet(
-        actions: [
-          CupertinoActionSheetAction(
-            onPressed: () {
-              Navigator.pop(context, 0);
-            },
-            child: Text("Buat Story"),
-          ),
-          CupertinoActionSheetAction(
-            isDestructiveAction: true,
-            onPressed: () {
-              Navigator.pop(context, 1);
-            },
-            child: Text("Keluar"),
-          ),
-        ],
-      );
 
   Widget _StoryItem({
     required BuildContext context,

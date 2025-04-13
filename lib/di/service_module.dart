@@ -12,15 +12,14 @@ abstract class ServiceModule {
 
   @Named("guest")
   @singleton
-  Dio guestDio() =>
-      Dio(
-        BaseOptions(
-          baseUrl: Constants.BASE_URL,
-          connectTimeout: Duration(seconds: 10),
-          receiveTimeout: Duration(seconds: 10),
-          headers: {"Content-Type": "application/json"},
-        ),
-      );
+  Dio guestDio() => Dio(
+    BaseOptions(
+      baseUrl: Constants.BASE_URL,
+      connectTimeout: Duration(seconds: 10),
+      receiveTimeout: Duration(seconds: 10),
+      headers: {"Content-Type": "application/json"},
+    ),
+  );
 
   @Named("user")
   @singleton
@@ -35,17 +34,17 @@ abstract class ServiceModule {
     );
 
     dio.interceptors.add(
-        InterceptorsWrapper(
-            onRequest: (options, handler) async {
-              final token = await sharedPref.getString(AuthPreferences.KEY_TOKEN);
+      InterceptorsWrapper(
+        onRequest: (options, handler) async {
+          final token = await sharedPref.getString(AuthPreferences.KEY_TOKEN);
 
-              if (token != null && token.isNotEmpty) {
-                options.headers['Authorization'] = 'Bearer $token';
-              }
+          if (token != null && token.isNotEmpty) {
+            options.headers['Authorization'] = 'Bearer $token';
+          }
 
-              return handler.next(options);
-            }
-        )
+          return handler.next(options);
+        },
+      ),
     );
 
     return dio;

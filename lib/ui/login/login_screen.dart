@@ -23,20 +23,7 @@ class LoginScreen extends StatelessWidget {
           onPressed: () async {
             final registered = await context.push<bool>(AppRoute.register);
             if (registered == true) {
-              showCupertinoDialog(
-                context: context,
-                builder:
-                    (context) => CupertinoAlertDialog(
-                      title: Text("Sukses Membuat Akun!"),
-                      content: Text("Silahkan masuk menggunakan akun Anda"),
-                      actions: [
-                        CupertinoButton(
-                          child: Text("Oke"),
-                          onPressed: () => Navigator.pop(context),
-                        ),
-                      ],
-                    ),
-              );
+              context.push(AppRoute.registerSuccessDialog);
             }
           },
           child: Text("Daftar"),
@@ -45,20 +32,7 @@ class LoginScreen extends StatelessWidget {
       child: BlocListener<AuthBloc, AuthState>(
         listener: (context, state) {
           if (state is AuthError) {
-            showCupertinoDialog(
-              context: context,
-              builder:
-                  (context) => CupertinoAlertDialog(
-                    title: Text("Terjadi kesalahan"),
-                    content: Text(state.message ?? "Silahkan coba lagi nanti"),
-                    actions: [
-                      CupertinoButton(
-                        child: Text("Oke"),
-                        onPressed: () => Navigator.pop(context),
-                      ),
-                    ],
-                  ),
-            );
+            context.push(AppRoute.errorDialog, extra: state.message);
           }
         },
         child: BlocBuilder<LoginFormBloc, LoginFormState>(
