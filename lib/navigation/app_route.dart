@@ -8,10 +8,11 @@ class AppRoute {
   static const details = "/details";
   static const detailsMap = "/details/map";
   static const createStory = "/create";
+  static const createStoryMap = "/create/map";
   static const errorDialog = "/dialog/error";
   static const sheetHome = "/sheet/home";
 
-  static const detailsMapLatitude = "latitude";
-  static const detailsMapLongitude = "longitude";
-  static const detailsMapAddress = "address";
+  static const mapLatitude = "latitude";
+  static const mapLongitude = "longitude";
+  static const mapAddress = "address";
 }

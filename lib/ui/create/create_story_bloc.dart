@@ -1,18 +1,16 @@
 import 'package:dicoding_story/data/repository/story_repository.dart';
 import 'package:flutter/foundation.dart';
-import 'package:image/image.dart' as img;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:image/image.dart' as img;
 import 'package:image_picker/image_picker.dart';
 import 'package:injectable/injectable.dart';
 
 import '../../data/remote/display_exception.dart';
 
-part 'create_story_event.dart';
-
-part 'create_story_state.dart';
-
 part 'create_story_bloc.freezed.dart';
+part 'create_story_event.dart';
+part 'create_story_state.dart';
 
 @injectable
 class CreateStoryBloc extends Bloc<CreateStoryEvent, CreateStoryState> {
@@ -24,6 +22,15 @@ class CreateStoryBloc extends Bloc<CreateStoryEvent, CreateStoryState> {
     });
     on<_RemoveImage>((event, emit) {
       emit(state.copyWith(image: null, imageIsEmpty: true));
+    });
+    on<_LocationAdded>((event, emit) {
+      emit(
+        state.copyWith(
+          location: event.location,
+          latitude: event.latitude,
+          longitude: event.longitude,
+        ),
+      );
     });
     on<_OnDescriptionChanges>((event, emit) {
       emit(
@@ -45,6 +52,8 @@ class CreateStoryBloc extends Bloc<CreateStoryEvent, CreateStoryState> {
             bytes: compressed,
             fileName: state.image?.name ?? "",
             description: state.description,
+              latitude: state.latitude,
+              longitude: state.longitude
           );
         }
         emit(state.copyWith(loading: false, success: true));

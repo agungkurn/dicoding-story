@@ -38,12 +38,16 @@ class StoryRepository {
     required List<int> bytes,
     required String fileName,
     required String description,
+    double? latitude,
+    double? longitude,
   }) async {
     try {
       await _api.postStory(
         bytes: bytes,
         fileName: fileName,
         description: description,
+          latitude: latitude,
+          longitude: longitude
       );
     } catch (e, stack) {
       if (kDebugMode) print(stack);

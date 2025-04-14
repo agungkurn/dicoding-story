@@ -24,7 +24,7 @@ class _HomeScreenState extends State<HomeScreen> {
       if (scrollController.position.pixels >=
           scrollController.position.maxScrollExtent) {
         if (storyBloc.state.hasNextPage) {
-          storyBloc.add(StoryListEvent.fetchList());
+          storyBloc.add(StoryListEvent.fetchNextPage());
         }
       }
     });
@@ -44,8 +44,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   authBlocWatch.state is AuthLoading
                       ? CupertinoActivityIndicator()
                       : CupertinoButton(
-                        padding: EdgeInsets.zero,
-                        minSize: 0,
+                        sizeStyle: CupertinoButtonSize.small,
                         onPressed: () async {
                           final index = await context.push(AppRoute.sheetHome);
 

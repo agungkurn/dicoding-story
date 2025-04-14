@@ -1,12 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-class MapsScreen extends StatelessWidget {
+class DetailsMapsScreen extends StatelessWidget {
   final double latitude;
   final double longitude;
   final String address;
 
-  const MapsScreen({
+  const DetailsMapsScreen({
     super.key,
     required this.latitude,
     required this.longitude,

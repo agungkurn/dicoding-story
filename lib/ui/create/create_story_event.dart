@@ -6,6 +6,12 @@ abstract class CreateStoryEvent with _$CreateStoryEvent {
 
   const factory CreateStoryEvent.removeImage() = _RemoveImage;
 
+  const factory CreateStoryEvent.locationAdded(
+    String location,
+    double latitude,
+    double longitude,
+  ) = _LocationAdded;
+
   const factory CreateStoryEvent.onDescriptionChanges(String data) =
       _OnDescriptionChanges;
 

@@ -4,13 +4,15 @@ import 'package:dicoding_story/navigation/dialog_page.dart';
 import 'package:dicoding_story/navigation/modal_popup_page.dart';
 import 'package:dicoding_story/ui/create/create_story_bloc.dart';
 import 'package:dicoding_story/ui/create/create_story_screen.dart';
+import 'package:dicoding_story/ui/create/maps/choose_location_bloc.dart';
+import 'package:dicoding_story/ui/create/maps/choose_location_screen.dart';
 import 'package:dicoding_story/ui/details/details_bloc.dart';
 import 'package:dicoding_story/ui/details/details_screen.dart';
+import 'package:dicoding_story/ui/details/maps/details_maps_screen.dart';
 import 'package:dicoding_story/ui/home/home_screen.dart';
 import 'package:dicoding_story/ui/home/story_list_bloc.dart';
 import 'package:dicoding_story/ui/login/login_form_bloc.dart';
 import 'package:dicoding_story/ui/login/login_screen.dart';
-import 'package:dicoding_story/ui/maps/maps_screen.dart';
 import 'package:dicoding_story/ui/register/register_form_bloc.dart';
 import 'package:dicoding_story/ui/register/register_screen.dart';
 import 'package:flutter/cupertino.dart';
@@ -105,22 +107,18 @@ class MyApp extends StatelessWidget {
                   builder: (_, state) {
                     final latitude =
                         double.tryParse(
-                          state.uri.queryParameters[AppRoute
-                                  .detailsMapLatitude] ??
-                              "",
+                          state.uri.queryParameters[AppRoute.mapLatitude] ?? "",
                         ) ??
                         .0;
                     final longitude =
                         double.tryParse(
-                          state.uri.queryParameters[AppRoute
-                                  .detailsMapLongitude] ??
+                          state.uri.queryParameters[AppRoute.mapLongitude] ??
                               "",
                         ) ??
                         .0;
                     final address =
-                        state.uri.queryParameters[AppRoute.detailsMapAddress] ??
-                        "";
-                    return MapsScreen(
+                        state.uri.queryParameters[AppRoute.mapAddress] ?? "";
+                    return DetailsMapsScreen(
                       latitude: latitude,
                       longitude: longitude,
                       address: address,
@@ -134,6 +132,24 @@ class MyApp extends StatelessWidget {
                         create: (_) => getIt<CreateStoryBloc>(),
                         child: CreateStoryScreen(),
                       ),
+                ),
+                GoRoute(
+                  path: AppRoute.createStoryMap,
+                  builder: (_, state) {
+                    final latitude = double.tryParse(
+                      state.uri.queryParameters[AppRoute.mapLatitude] ?? "",
+                    );
+                    final longitude = double.tryParse(
+                      state.uri.queryParameters[AppRoute.mapLongitude] ?? "",
+                    );
+                    return BlocProvider(
+                      create: (_) => getIt<ChooseLocationBloc>(),
+                      child: ChooseLocationScreen(
+                        latitude: latitude,
+                        longitude: longitude,
+                      ),
+                    );
+                  },
                 ),
                 GoRoute(
                   path: AppRoute.errorDialog,

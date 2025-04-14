@@ -15,34 +15,44 @@ class StoryListBloc extends Bloc<StoryListEvent, StoryListState> {
   final StoryRepository _repository;
 
   int? _page = 1;
-  int _size = 10;
+  final int _size = 10;
 
   StoryListBloc(this._repository) : super(StoryListState.initial()) {
     on<_FetchList>((event, emit) async {
-      if (state.loading || state.loadingNextPage) {
-        return;
-      }
+      if (state.loading) return;
 
-      _page ??= 1;
+      _page = 1;
 
-      if (_page == 1) {
+      emit(
+        state.copyWith(
+          loading: true,
+          loadingNextPage: false,
+          error: false,
+          errorMessage: null,
+        ),
+      );
+
+      try {
+        final newItems = await _repository.getAllStories(page: 1, size: _size);
+
         emit(
           state.copyWith(
-            loading: true,
-            loadingNextPage: false,
-            error: false,
-            errorMessage: null,
+            stories: newItems,
+            loading: false,
+            hasNextPage: newItems.length == _size,
           ),
         );
-      } else {
-        emit(
-          state.copyWith(
-            loadingNextPage: true,
-            error: false,
-            errorMessage: null,
-          ),
-        );
+      } on Exception catch (e) {
+        final msg = (e is DisplayException) ? e.message : null;
+        emit(state.copyWith(error: true, errorMessage: msg));
       }
+    });
+    on<_FetchNextPage>((event, emit) async {
+      if (state.loadingNextPage) return;
+
+      emit(
+        state.copyWith(loadingNextPage: true, error: false, errorMessage: null),
+      );
 
       try {
         final newItems = await _repository.getAllStories(

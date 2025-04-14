@@ -114,9 +114,9 @@ class DetailsScreen extends StatelessWidget {
 
                       context.push(
                         "${AppRoute.detailsMap}?"
-                        "${AppRoute.detailsMapLatitude}=$lat&"
-                        "${AppRoute.detailsMapLongitude}=$lng&"
-                        "${AppRoute.detailsMapAddress}=$address",
+                        "${AppRoute.mapLatitude}=$lat&"
+                        "${AppRoute.mapLongitude}=$lng&"
+                        "${AppRoute.mapAddress}=$address",
                       );
                     },
                   )

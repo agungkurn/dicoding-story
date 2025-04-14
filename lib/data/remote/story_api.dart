@@ -45,9 +45,13 @@ class StoryApi {
     required List<int> bytes,
     required String fileName,
     required String description,
+    double? latitude,
+    double? longitude,
   }) async {
     final formData = FormData.fromMap({
       "description": description,
+      "lat": latitude,
+      "lon": longitude,
       "photo": MultipartFile.fromBytes(
         bytes,
         filename: fileName,
