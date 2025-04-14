@@ -52,8 +52,8 @@ class CreateStoryBloc extends Bloc<CreateStoryEvent, CreateStoryState> {
             bytes: compressed,
             fileName: state.image?.name ?? "",
             description: state.description,
-              latitude: state.latitude,
-              longitude: state.longitude
+            latitude: state.latitude,
+            longitude: state.longitude,
           );
         }
         emit(state.copyWith(loading: false, success: true));

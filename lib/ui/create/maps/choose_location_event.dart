@@ -8,4 +8,11 @@ abstract class ChooseLocationEvent with _$ChooseLocationEvent {
   ) = _MarkerMoved;
 
   const factory ChooseLocationEvent.onMarkerCleared() = _MarkerCleared;
+
+  const factory ChooseLocationEvent.onDetectUserLocation({
+    @Default(true) bool moveCamera,
+  }) = _DetectUserLocation;
+
+  const factory ChooseLocationEvent.onCameraMovedToUserLocation() =
+      _CameraMovedToUserLocation;
 }

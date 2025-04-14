@@ -2,7 +2,6 @@ import 'package:dicoding_story/data/model/response/story.dart';
 import 'package:dicoding_story/navigation/app_route.dart';
 import 'package:dicoding_story/ui/details/details_bloc.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
@@ -170,7 +169,7 @@ class DetailsScreen extends StatelessWidget {
     child: Row(
       spacing: 8,
       children: [
-        Icon(Icons.location_pin),
+        Icon(CupertinoIcons.location_solid),
         Flexible(
           child: Text(
             address,

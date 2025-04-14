@@ -21,6 +21,8 @@ class DetailsMapsScreen extends StatelessWidget {
       ),
       child: Center(
         child: GoogleMap(
+          mapToolbarEnabled: false,
+          zoomControlsEnabled: false,
           initialCameraPosition: CameraPosition(
             target: LatLng(latitude, longitude),
             zoom: 15,

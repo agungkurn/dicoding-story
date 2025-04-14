@@ -18,10 +18,28 @@ class ChooseLocationScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final blocRead = context.read<ChooseLocationBloc>();
+    final hasPreviousLocation = latitude != null && longitude != null;
+    final blocRead =
+        context.read<ChooseLocationBloc>()..add(
+          ChooseLocationEvent.onDetectUserLocation(
+            moveCamera: !hasPreviousLocation,
+          ),
+        );
+
+    if (hasPreviousLocation) {
+      blocRead.add(ChooseLocationEvent.onMarkerMoved(latitude!, longitude!));
+    }
 
     return CupertinoPageScaffold(
-      child: BlocBuilder<ChooseLocationBloc, ChooseLocationState>(
+      child: BlocConsumer<ChooseLocationBloc, ChooseLocationState>(
+        listener: (context, state) {
+          if (state.userLocation != null && state.moveCameraToUserLocation) {
+            _controller.animateCamera(
+              CameraUpdate.newLatLng(state.userLocation!),
+            );
+            blocRead.add(ChooseLocationEvent.onCameraMovedToUserLocation());
+          }
+        },
         builder:
             (context, state) => Stack(
               children: [
@@ -63,7 +81,22 @@ class ChooseLocationScreen extends StatelessWidget {
                     ),
                   ),
                 ),
-                state.location != null && state.location!.isNotEmpty
+                Positioned(
+                  top: 16,
+                  right: 16,
+                  child: SafeArea(
+                    child: CupertinoButton.filled(
+                      onPressed: () {
+                        blocRead.add(
+                          ChooseLocationEvent.onDetectUserLocation(),
+                        );
+                      },
+                      sizeStyle: CupertinoButtonSize.small,
+                      child: Icon(CupertinoIcons.scope),
+                    ),
+                  ),
+                ),
+                state.newLocation != null
                     ? Positioned(
                       bottom: 16,
                       left: 16,
@@ -97,7 +130,7 @@ class ChooseLocationScreen extends StatelessWidget {
                                 ),
                               ),
                               Text(
-                                state.location!,
+                                state.locationName!,
                                 maxLines: 2,
                                 overflow: TextOverflow.ellipsis,
                               ),
@@ -105,12 +138,11 @@ class ChooseLocationScreen extends StatelessWidget {
                                 sizeStyle: CupertinoButtonSize.medium,
                                 child: Text("Pilih Lokasi"),
                                 onPressed: () {
-                                  final result = {
-                                    AppRoute.mapLatitude: state.latitude!,
-                                    AppRoute.mapLongitude: state.longitude!,
-                                    AppRoute.mapAddress: state.location!,
-                                  };
-                                  context.pop(result);
+                                  _onSelectLocation(
+                                    context,
+                                    state.newLocation!,
+                                    state.locationName!,
+                                  );
                                 },
                               ),
                             ],
@@ -123,5 +155,18 @@ class ChooseLocationScreen extends StatelessWidget {
             ),
       ),
     );
+  }
+
+  void _onSelectLocation(
+    BuildContext context,
+    LatLng location,
+    String locationName,
+  ) {
+    final result = {
+      AppRoute.mapLatitude: location.latitude,
+      AppRoute.mapLongitude: location.longitude,
+      AppRoute.mapAddress: locationName,
+    };
+    context.pop(result);
   }
 }

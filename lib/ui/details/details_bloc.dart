@@ -30,8 +30,10 @@ class DetailsBloc extends Bloc<DetailsEvent, DetailsState> {
           final place = placemark[0];
 
           final fullAddress = [
-            place.subLocality,
-            place.locality,
+            place.name,
+            place.thoroughfare,
+            place.subAdministrativeArea,
+            place.administrativeArea,
             place.country,
           ].where((s) => s != null && s.isNotEmpty).join(", ");
           emit(DetailsState.success(story: result, address: fullAddress));

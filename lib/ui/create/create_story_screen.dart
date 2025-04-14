@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:dicoding_story/ui/create/create_story_bloc.dart';
 import 'package:dicoding_story/widgets/custom_cupertino_text_field.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
@@ -24,44 +23,43 @@ class CreateStoryScreen extends StatelessWidget {
       }
 
       if (state.error) {
-            context.push(AppRoute.errorDialog, extra: state.errorMessage);
-          }
-        },
-        builder: (context, state) {
-          final bloc = context.read<CreateStoryBloc>();
-          return CupertinoTheme(
-            data: CupertinoTheme.of(context).copyWith(
-                brightness: Brightness.dark),
-            child: CupertinoPageScaffold(
-              navigationBar: CupertinoNavigationBar(
-                middle: Text("Buat Story Baru"),
-                trailing: AnimatedSwitcher(
-                  duration: Duration(milliseconds: 200),
-                  child:
+        context.push(AppRoute.errorDialog, extra: state.errorMessage);
+      }
+    },
+    builder: (context, state) {
+      final bloc = context.read<CreateStoryBloc>();
+      return CupertinoTheme(
+        data: CupertinoTheme.of(context).copyWith(brightness: Brightness.dark),
+        child: CupertinoPageScaffold(
+          navigationBar: CupertinoNavigationBar(
+            middle: Text("Buat Story Baru"),
+            trailing: AnimatedSwitcher(
+              duration: Duration(milliseconds: 200),
+              child:
                   state.loading
                       ? CupertinoActivityIndicator()
                       : state.canSubmit
                       ? CupertinoButton(
-                    padding: EdgeInsets.zero,
-                    minSize: 0,
-                    child: Icon(Icons.send),
-                    onPressed: () {
-                      bloc.add(CreateStoryEvent.onSubmit());
-                    },
-                  )
+                        padding: EdgeInsets.zero,
+                        minSize: 0,
+                        child: Icon(CupertinoIcons.paperplane_fill),
+                        onPressed: () {
+                          bloc.add(CreateStoryEvent.onSubmit());
+                        },
+                      )
                       : SizedBox.shrink(),
-                ),
-              ),
-              child: SafeArea(
-                child: _CreateStoryContent(
-                  context: context,
-                  editable: !state.loading,
-                  image: state.image,
-                  openImagePicker: () async {
-                    final picker = ImagePicker();
-                    final pickedFile = await picker.pickImage(
-                      source: ImageSource.gallery,
-                    );
+            ),
+          ),
+          child: SafeArea(
+            child: _CreateStoryContent(
+              context: context,
+              editable: !state.loading,
+              image: state.image,
+              openImagePicker: () async {
+                final picker = ImagePicker();
+                final pickedFile = await picker.pickImage(
+                  source: ImageSource.gallery,
+                );
 
                 if (pickedFile != null) {
                   bloc.add(CreateStoryEvent.addImage(pickedFile));
@@ -142,7 +140,10 @@ class CreateStoryScreen extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            Icon(Icons.add, color: CupertinoColors.white),
+                            Icon(
+                              CupertinoIcons.add,
+                              color: CupertinoColors.white,
+                            ),
                             Text(
                               "Tambah foto",
                               style: CupertinoTheme.of(context)
@@ -167,7 +168,7 @@ class CreateStoryScreen extends StatelessWidget {
                               sizeStyle: CupertinoButtonSize.small,
                               onPressed: onRemoveImage,
                               child: Icon(
-                                Icons.clear,
+                                CupertinoIcons.clear,
                                 color: CupertinoColors.white,
                               ),
                             ),
@@ -194,6 +195,7 @@ class CreateStoryScreen extends StatelessWidget {
               ),
               _LocationWidget(
                 context: context,
+                enabled: editable,
                 address: location,
                 onTap: onChooseLocation,
               ),
@@ -206,14 +208,15 @@ class CreateStoryScreen extends StatelessWidget {
 
   Widget _LocationWidget({
     required BuildContext context,
+    required bool enabled,
     required String? address,
     required GestureTapCallback onTap,
   }) => CupertinoButton.tinted(
-    onPressed: onTap,
+    onPressed: enabled ? onTap : null,
     child: Row(
       spacing: 8,
       children: [
-        Icon(Icons.location_pin),
+        Icon(CupertinoIcons.location_solid),
         Flexible(
           child: Text(
             address ?? "Tambah lokasi",
