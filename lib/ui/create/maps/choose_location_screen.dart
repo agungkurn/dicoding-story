@@ -14,7 +14,7 @@ class ChooseLocationScreen extends StatelessWidget {
   final defaultLatitude = -6.2088;
   final defaultLongitude = 106.8456;
 
-  late final GoogleMapController _controller;
+  GoogleMapController? _controller;
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +34,7 @@ class ChooseLocationScreen extends StatelessWidget {
       child: BlocConsumer<ChooseLocationBloc, ChooseLocationState>(
         listener: (context, state) {
           if (state.userLocation != null && state.moveCameraToUserLocation) {
-            _controller.animateCamera(
+            _controller?.animateCamera(
               CameraUpdate.newLatLng(state.userLocation!),
             );
             blocRead.add(ChooseLocationEvent.onCameraMovedToUserLocation());
@@ -58,7 +58,7 @@ class ChooseLocationScreen extends StatelessWidget {
                     zoom: 15,
                   ),
                   onTap: (latLng) {
-                    _controller.animateCamera(CameraUpdate.newLatLng(latLng));
+                    _controller?.animateCamera(CameraUpdate.newLatLng(latLng));
                     blocRead.add(
                       ChooseLocationEvent.onMarkerMoved(
                         latLng.latitude,

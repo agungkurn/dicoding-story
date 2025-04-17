@@ -152,10 +152,10 @@ class DetailsScreen extends StatelessWidget {
                 story.description,
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
-                // style: CupertinoTheme.of(context).textTheme.textStyle.copyWith(
-                //   fontSize: 14,
-                //   color: CupertinoColors.white,
-                // ),
+                style: CupertinoTheme.of(context).textTheme.textStyle.copyWith(
+                  fontSize: 14,
+                  color: CupertinoColors.white,
+                ),
               ),
     ),
   );
@@ -175,9 +175,10 @@ class DetailsScreen extends StatelessWidget {
             address,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
-            style: CupertinoTheme.of(
-              context,
-            ).textTheme.textStyle.copyWith(fontSize: 14),
+            style: CupertinoTheme.of(context).textTheme.textStyle.copyWith(
+              fontSize: 14,
+              color: CupertinoColors.white,
+            ),
           ),
         ),
       ],

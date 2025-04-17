@@ -54,6 +54,8 @@ class StoryListBloc extends Bloc<StoryListEvent, StoryListState> {
         state.copyWith(loadingNextPage: true, error: false, errorMessage: null),
       );
 
+      if (_page == 1) _page = _page! + 1;
+
       try {
         final newItems = await _repository.getAllStories(
           page: _page!,

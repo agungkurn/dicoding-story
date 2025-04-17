@@ -50,11 +50,13 @@ class _HomeScreenState extends State<HomeScreen> {
 
                           switch (index) {
                             case 0:
-                              final uploaded = await context.push<bool>(
-                                AppRoute.createStory,
-                              );
-                              if (uploaded == true) {
-                                storyBloc.add(StoryListEvent.fetchList());
+                              if (context.mounted) {
+                                final uploaded = await context.push<bool>(
+                                  AppRoute.createStory,
+                                );
+                                if (uploaded == true) {
+                                  storyBloc.add(StoryListEvent.fetchList());
+                                }
                               }
 
                               break;

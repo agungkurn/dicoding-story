@@ -6,5 +6,6 @@ abstract class RegisterFormEvent with _$RegisterFormEvent {
 
   const factory RegisterFormEvent.emailChanged(String data) = _EmailChanged;
 
-  const factory RegisterFormEvent.passwordChanged(String data) = _PasswordChanged;
+  const factory RegisterFormEvent.passwordChanged(String data) =
+      _PasswordChanged;
 }

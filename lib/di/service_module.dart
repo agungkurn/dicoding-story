@@ -14,7 +14,7 @@ abstract class ServiceModule {
   @singleton
   Dio guestDio() => Dio(
     BaseOptions(
-      baseUrl: Constants.BASE_URL,
+      baseUrl: Constants.baseUrl,
       connectTimeout: Duration(seconds: 10),
       receiveTimeout: Duration(seconds: 10),
       headers: {"Content-Type": "application/json"},
@@ -26,7 +26,7 @@ abstract class ServiceModule {
   Dio userDio(SharedPreferencesAsync sharedPref) {
     final dio = Dio(
       BaseOptions(
-        baseUrl: Constants.BASE_URL,
+        baseUrl: Constants.baseUrl,
         connectTimeout: Duration(seconds: 10),
         receiveTimeout: Duration(seconds: 10),
         headers: {"Content-Type": "application/json"},
@@ -36,7 +36,7 @@ abstract class ServiceModule {
     dio.interceptors.add(
       InterceptorsWrapper(
         onRequest: (options, handler) async {
-          final token = await sharedPref.getString(AuthPreferences.KEY_TOKEN);
+          final token = await sharedPref.getString(AuthPreferences.keyToken);
 
           if (token != null && token.isNotEmpty) {
             options.headers['Authorization'] = 'Bearer $token';

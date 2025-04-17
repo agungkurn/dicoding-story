@@ -46,8 +46,8 @@ class StoryRepository {
         bytes: bytes,
         fileName: fileName,
         description: description,
-          latitude: latitude,
-          longitude: longitude
+        latitude: latitude,
+        longitude: longitude,
       );
     } catch (e, stack) {
       if (kDebugMode) print(stack);

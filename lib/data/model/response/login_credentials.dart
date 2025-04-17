@@ -11,5 +11,6 @@ abstract class LoginCredentials with _$LoginCredentials {
     required String token,
   }) = _LoginCredentials;
 
-  factory LoginCredentials.fromJson(Map<String, dynamic> json) => _$LoginCredentialsFromJson(json);
+  factory LoginCredentials.fromJson(Map<String, dynamic> json) =>
+      _$LoginCredentialsFromJson(json);
 }

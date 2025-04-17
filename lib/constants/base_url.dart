@@ -1,3 +1,3 @@
 class Constants {
-  static const BASE_URL = "https://story-api.dicoding.dev/v1";
+  static const baseUrl = "https://story-api.dicoding.dev/v1";
 }

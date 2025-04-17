@@ -7,19 +7,19 @@ class AuthPreferences {
 
   AuthPreferences(this._pref);
 
-  Future<bool> get isLoggedIn async => await _pref.getString(KEY_TOKEN) != null;
+  Future<bool> get isLoggedIn async => await _pref.getString(keyToken) != null;
 
   Future<void> setToken(String token) async {
-    await _pref.setString(KEY_TOKEN, token);
+    await _pref.setString(keyToken, token);
   }
 
   Future<String> getToken() async {
-    return await _pref.getString(KEY_TOKEN) ?? "";
+    return await _pref.getString(keyToken) ?? "";
   }
 
-  Future<void> removeToken() async{
-    await _pref.remove(KEY_TOKEN);
+  Future<void> removeToken() async {
+    await _pref.remove(keyToken);
   }
 
-  static const KEY_TOKEN = "token";
+  static const keyToken = "token";
 }

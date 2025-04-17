@@ -21,13 +21,13 @@ abstract class CreateStoryState with _$CreateStoryState {
     description: "",
     imageIsEmpty: false,
     descriptionIsEmpty: false,
-      location: null,
-      latitude: null,
-      longitude: null,
+    location: null,
+    latitude: null,
+    longitude: null,
     loading: false,
     success: false,
     error: false,
-    errorMessage: null
+    errorMessage: null,
   );
 }
 

@@ -19,7 +19,7 @@ class LoginScreen extends StatelessWidget {
         minSize: 0,
         onPressed: () async {
           final registered = await context.push<bool>(AppRoute.register);
-          if (registered == true) {
+          if (registered == true && context.mounted) {
             context.push(AppRoute.registerSuccessDialog);
           }
         },
@@ -38,67 +38,68 @@ class LoginScreen extends StatelessWidget {
           final authBloc = context.read<AuthBloc>();
 
           return SafeArea(
-                child: Center(
-                  child: SingleChildScrollView(
-                    padding: const EdgeInsets.all(16),
-                    child: _LoginContent(formBloc, state, authBloc),
-                  ),
-                ),
-              );
-            },
-          ),
-        ),
-      );
+            child: Center(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.all(16),
+                child: _LoginContent(formBloc, state, authBloc),
+              ),
+            ),
+          );
+        },
+      ),
+    ),
+  );
 
-  Widget _LoginContent(LoginFormBloc formBloc,
-      LoginFormState state,
-      AuthBloc authBloc,) =>
-      Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        spacing: 8,
-        children: [
-          CustomCupertinoTextField(
-            placeholder: "E-mail",
-            keyboardType: TextInputType.emailAddress,
-            textInputAction: TextInputAction.next,
-            onChanged: (text) {
-              formBloc.add(LoginFormEvent.emailChanged(text));
-            },
-            errorText: state.emailErrorMessage,
-          ),
-          CustomCupertinoTextField(
-            placeholder: "Password",
-            textInputAction: TextInputAction.done,
-            obscureText: true,
-            onChanged: (text) {
-              formBloc.add(LoginFormEvent.passwordChanged(text));
-            },
-            errorText: state.passwordErrorMessage,
-          ),
-          AnimatedSwitcher(
-            duration: Duration(milliseconds: 500),
-            child:
+  Widget _LoginContent(
+    LoginFormBloc formBloc,
+    LoginFormState state,
+    AuthBloc authBloc,
+  ) => Column(
+    mainAxisAlignment: MainAxisAlignment.center,
+    crossAxisAlignment: CrossAxisAlignment.center,
+    spacing: 8,
+    children: [
+      CustomCupertinoTextField(
+        placeholder: "E-mail",
+        keyboardType: TextInputType.emailAddress,
+        textInputAction: TextInputAction.next,
+        onChanged: (text) {
+          formBloc.add(LoginFormEvent.emailChanged(text));
+        },
+        errorText: state.emailErrorMessage,
+      ),
+      CustomCupertinoTextField(
+        placeholder: "Password",
+        textInputAction: TextInputAction.done,
+        obscureText: true,
+        onChanged: (text) {
+          formBloc.add(LoginFormEvent.passwordChanged(text));
+        },
+        errorText: state.passwordErrorMessage,
+      ),
+      AnimatedSwitcher(
+        duration: Duration(milliseconds: 500),
+        child:
             authBloc.state is AuthLoading
                 ? CupertinoActivityIndicator()
                 : Container(
-              margin: EdgeInsets.only(top: 8),
-              child: SizedBox(
-                width: double.infinity,
-                child: CupertinoButton.filled(
-                  onPressed:
-                  state.canSubmit
-                      ? () {
-                    authBloc.add(
-                      AuthEvent.login(state.email, state.password),
-                    );
-                  }
-                      : null,
-                  child: Text("Masuk"),
+                  margin: EdgeInsets.only(top: 8),
+                  child: SizedBox(
+                    width: double.infinity,
+                    child: CupertinoButton.filled(
+                      onPressed:
+                          state.canSubmit
+                              ? () {
+                                authBloc.add(
+                                  AuthEvent.login(state.email, state.password),
+                                );
+                              }
+                              : null,
+                      child: Text("Masuk"),
+                    ),
+                  ),
                 ),
-              ),
-            ),
-          ),
-        ],
+      ),
+    ],
   );
 }
